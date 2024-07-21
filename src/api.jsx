@@ -36,10 +36,10 @@ export const createProduct = (product) => axios.post(`${PRODUCTS_URL}/product`, 
 export const updateProduct = (id, product) => axios.put(`${PRODUCTS_URL}/${id}`, product);
 export const deleteProduct = (id) => axios.delete(`${PRODUCTS_URL}/${id}`);
 
-export const searchProducts = async (query) => {
+export const searchProducts = async (name) => {
     try {
         const response = await axios.get(`${PRODUCTS_URL}/search`, {
-            params: { query }
+            params: { name }
         });
         return response.data;  // Ensure your API returns a `message` field when there are no results
     } catch (error) {
@@ -59,12 +59,14 @@ export const loginUser = async (email, password) => {
     }
 };
 
-export const registerUser = async (username, email, password) => {
+export const registerUser = async (username, email, password, confirmPassword) => {
     try {
-        const response = await axios.post(`${AUTH_URL}/register`, { username, email, password });
+        const response = await axios.post(`${AUTH_URL}/register`, { username, email, password, confirmPassword });
         return response.data; // Return the response data, usually a success message or user info
     } catch (error) {
         console.error('Error registering:', error);
         throw error; // Re-throw error to be handled in the calling function
     }
 };
+
+export const logoutUser = async () => axios.post(`${AUTH_URL}/logout`);

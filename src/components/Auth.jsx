@@ -1,8 +1,9 @@
 // src/components/Auth.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, TextField, Button, Typography, Box, Link, Snackbar, Alert } from '@mui/material';
+import { Container, TextField, Typography, Box, Link, Snackbar, Alert } from '@mui/material';
 import { Slide } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { loginUser, registerUser } from '../api';
 
 const Auth = () => {
@@ -11,6 +12,7 @@ const Auth = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [loading, setLoading] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
@@ -29,34 +31,33 @@ const Auth = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!isLogin && password !== confirmPassword) {
-            showSnackbar('Passwords do not match', 'error');
-            return;
-        }
+        setLoading(true); 
 
         try {
             if (isLogin) {
                 // Perform login
                 const response = await loginUser(email, password);
                 localStorage.setItem('token', response.token);
+                localStorage.setItem('username', response.username);
                 showSnackbar('Login successful');
                 // Navigate to dashboard
-                // Navigate to dashboard after a short delay
-                setTimeout(() => navigate('/dashboard'), 1000);
+                setTimeout(() => navigate('/dashboard', { replace: true }), 1000);
             } else {
                 // Perform signup
-                await registerUser(username, email, password);
+                const response = await registerUser(username, email, password, confirmPassword);
+                localStorage.setItem('username', response.username);
                 showSnackbar('Signup successful');
-                // // Navigate to login
-                // setIsLogin(true);
-                // Navigate to dashboard after a short delay
-                setTimeout(() => navigate('/dashboard'), 1000);
+                // Navigate to login
+                setTimeout(() => navigate('/dashboard', { replace: true }), 1000);
             }
         } catch (err) {
             showSnackbar(
                 err.response?.data?.message || (isLogin ? 'Login failed' : 'Signup failed'),
                 'error'
             );
+        }
+        finally {
+            setLoading(false); 
         }
     };
 
@@ -102,7 +103,7 @@ const Auth = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
-                    {/* {!isLogin && (
+                    {!isLogin && (
                         <TextField
                             label="Confirm Password"
                             type="password"
@@ -111,11 +112,17 @@ const Auth = () => {
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             required
-                        /> */}
-                    {/* )} */}
-                    <Button type="submit" variant="contained" color="primary" fullWidth>
-                        {isLogin ? 'Login' : 'Signup'}
-                    </Button>
+                        /> )}
+                    <LoadingButton
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        loading={loading} 
+                        sx={{ mt: 3, mb: 2 }}
+                    >
+                        {isLogin ? 'Login' : 'Register'}
+                    </LoadingButton>
                 </form>
                 <Box mt={2}>
                     <Typography>
