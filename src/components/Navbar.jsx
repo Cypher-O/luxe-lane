@@ -106,7 +106,7 @@ const Navbar = ({ username, loading, onLogout, onSearch, onSearchError }) => {
 
     return (
         <>
-            <AppBar position="sticky" style={{marginBottom: 30}}>
+            <AppBar position="sticky" sx={{ marginBottom: 3}}>
                 <Toolbar>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
                         CatalogCraft
@@ -131,7 +131,7 @@ const Navbar = ({ username, loading, onLogout, onSearch, onSearchError }) => {
                     </Search>
                     <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
                         <Typography variant="subtitle1" sx={{ mr: 2 }}>
-                            Hi, {username}!
+                            Hi, {username}
                         </Typography>
                         <IconButton color="inherit" onClick={handleLogoutClick} disabled={loading}>
                             <LogoutIcon />

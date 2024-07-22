@@ -212,6 +212,9 @@
 // };
 
 // export default Dashboard;
+
+
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProductList from '../components/ProductList';
@@ -228,7 +231,7 @@ const Dashboard = () => {
     const [message, setMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
+    // const [searchQuery, setSearchQuery] = useState('');
 
     const navigate = useNavigate();
     const username = localStorage.getItem('username');
@@ -293,7 +296,7 @@ const Dashboard = () => {
 
     const handleSearch = async (query) => {
         console.log('handleSearch called with query:', query);
-        setSearchQuery(query);
+        // setSearchQuery(query);
         setIsLoading(true);
         try {
             if (query) {
@@ -325,7 +328,14 @@ const Dashboard = () => {
     };
 
     return (
-        <Container>
+        <Container maxWidth={false}
+        disableGutters 
+        sx={{ 
+          width: '100vw', 
+          maxWidth: '100%', 
+          px: 0,
+          overflow: 'hidden'
+        }}>
             <Navbar
                 username={username}
                 loading={loading}
@@ -333,7 +343,8 @@ const Dashboard = () => {
                 onSearch={handleSearch}
                 onSearchError={(error) => console.error('Search error:', error)}
             />
-            <Paper elevation={3} sx={{ padding: 3, marginBottom: 3, minHeight: '200px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Paper elevation={3} sx={{width: '100%', padding: 3, marginBottom: 3, minHeight: '200px', display: 'flex', justifyContent: 'center', alignItems: 'center',
+  boxSizing: 'border-box' }}>
                 {isLoading ? (
                     <CircularProgress />
                 ) : message ? (

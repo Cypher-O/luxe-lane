@@ -41,14 +41,17 @@ const Auth = () => {
                 localStorage.setItem('username', response.username);
                 showSnackbar('Login successful');
                 // Navigate to dashboard
-                setTimeout(() => navigate('/dashboard', { replace: true }), 1000);
+                navigate('/dashboard', { replace: true });
+                // setTimeout(() => navigate('/dashboard', { replace: true }), 1000);
             } else {
                 // Perform signup
                 const response = await registerUser(username, email, password, confirmPassword);
+                localStorage.setItem('token', response.token);
                 localStorage.setItem('username', response.username);
                 showSnackbar('Signup successful');
-                // Navigate to login
-                setTimeout(() => navigate('/dashboard', { replace: true }), 1000);
+                // Navigate to dashboard
+                navigate('/dashboard', { replace: true });
+                // setTimeout(() => navigate('/dashboard', { replace: true }), 1000);
             }
         } catch (err) {
             showSnackbar(
